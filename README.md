@@ -1,14 +1,15 @@
-## TaskBeats
+## 📝 TaskBeats
 O app TaskBeat permite você criar categorias e suas tarefas.
 
-
-## Tecnologias
+## 📱 Screenshots
+## 💻 Tecnologias
+- kotlin
 - ViewGroup
    - Linaerlayout
    - Constraintlayout
-Views
-   - Text View
-   - Edit View
-   - Botton View
+Componentes de UI
+   - TextView
+   - EditView
+   - Botton
    - Recyclerview
 - Room Database
