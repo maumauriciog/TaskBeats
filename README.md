@@ -6,7 +6,6 @@ O app TaskBeat, desenvolvido em linguagem de programação kotlin, permite você
 - kotlin
 - ViewGroup
    - Linaerlayout
-   - Constraintlayout
 - Componentes de UI
    - TextView
    - EditView
