@@ -7,7 +7,7 @@ O app TaskBeat permite você criar categorias e suas tarefas.
 - ViewGroup
    - Linaerlayout
    - Constraintlayout
-Componentes de UI
+- Componentes de UI
    - TextView
    - EditView
    - Botton
