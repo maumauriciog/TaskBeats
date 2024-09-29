@@ -22,7 +22,6 @@ class CategoryListAdapter :
             LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
         return CategoryViewHolder(view)
     }
-
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = getItem(position)
         holder.bind(category, onClick)
@@ -49,8 +48,5 @@ class CategoryListAdapter :
         override fun areContentsTheSame(oldItem: CategoryUiData, newItem: CategoryUiData): Boolean {
             return oldItem.name == newItem.name
         }
-
     }
-
-
 }

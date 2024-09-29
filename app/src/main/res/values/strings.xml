@@ -1,4 +1,20 @@
 <resources>
-    <string name="app_name">TaskBeats</string>
-    <string name="home_title">Task Beat</string>
+    <string name="app_name" translatable="false">TaskBeats</string>
+    <string name="home_title" translatable="false">Task Beat</string>
+
+    <!--about TASK - create and update-->
+    <string name="new_task">New Task</string>
+    <string name="write_new_task">write here the new task</string>
+    <string name="bt_new_task">create</string>
+
+    <string name="update_task">Update Task</string>
+    <string name="update_new_task">update this task</string>
+    <string name="bt_update_task">update</string>
+
+    <!--about CATEGORY - create and update-->
+    <string name="new_category">New Category</string>
+    <string name="write_new_category">write here the new category</string>
+    <string name="bt_create_category">create</string>
+
+    <string name="bt_delete_category">delete</string>
 </resources>
