@@ -6,6 +6,7 @@
     <string name="new_task">New Task</string>
     <string name="write_new_task">write here the new task</string>
     <string name="bt_new_task">create</string>
+    <string name="bt_delete_task">delete</string>
 
     <string name="update_task">Update Task</string>
     <string name="update_new_task">update this task</string>

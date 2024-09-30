@@ -25,7 +25,6 @@ class createCategorySheetFrame(private val onClicked: (String) -> Unit): BottomS
             onClicked.invoke(name)
             dismiss()
         }
-
         return view
     }
 }

@@ -1,6 +1,7 @@
 package com.devspace.taskbeats
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,14 +10,16 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 
 class createUpdateTaskSheetFrame(
     private val categoryList: List<CategoryUiData>,
     private val task: TaskUiData? = null,
-    private val onClicked: (TaskUiData) -> Unit,
-    private val onUpdateClicked: (TaskUiData) -> Unit
+    private val onCreateClicked: (TaskUiData) -> Unit,
+    private val onUpdateClicked: (TaskUiData) -> Unit,
+    private val onDeleteClicked: (TaskUiData) -> Unit
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -29,6 +32,7 @@ class createUpdateTaskSheetFrame(
         val spinner = view.findViewById<Spinner>(R.id.sp_category)
         val tv_title = view.findViewById<TextView>(R.id.tv_TitleTask)
         val bt_CrTask = view.findViewById<Button>(R.id.bv_crTask)
+        val bt_DelTask = view.findViewById<Button>(R.id.bv_delTask)
         val tiv_TaskName = view.findViewById<TextView>(R.id.tiv_writeTask)
 
         val categoryStr: List<String> = categoryList.map { it.name }
@@ -42,8 +46,7 @@ class createUpdateTaskSheetFrame(
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
             spinner.adapter = adapter
         }
-
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -52,38 +55,50 @@ class createUpdateTaskSheetFrame(
             ) {
                 taskCategory = categoryStr.get(position)
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
 
         //significa que não há click no float action button
-        if(task == null){
+        if (task == null) {
+            bt_DelTask.isVisible = false
             tv_title.setText(R.string.new_task)
             bt_CrTask.setText(R.string.bt_new_task)
-        }else{
+        } else {
+            bt_DelTask.isVisible = true
             tv_title.setText(R.string.update_task)
+            bt_CrTask.setText(R.string.bt_update_task)
             tiv_TaskName.setText(R.string.update_new_task)
             tiv_TaskName.setText(task.name)
 
-            val currentCategory = categoryList.first {it.name == task.category}
+            val currentCategory = categoryList.first { it.name == task.category }
             val index = categoryList.indexOf(currentCategory)
             spinner.setSelection(index)
+        }
+
+        bt_DelTask.setOnClickListener {
+            if (task != null) {
+                onDeleteClicked.invoke(task)
+                dismiss()
+            } else {
+                Log.d("createUpdateTaskSheetFrame", "task not found")
+            }
         }
 
         bt_CrTask.setOnClickListener {
             val nameTask = tiv_TaskName.text.toString()
             if (taskCategory != null) {
-                if(task == null){
-                onClicked.invoke(
-                    TaskUiData(
-                        id = 0,
-                        name = nameTask,
-                        category = requireNotNull(taskCategory)
+                if (task == null) {
+                    onCreateClicked.invoke(
+                        TaskUiData(
+                            id = 0,
+                            name = nameTask,
+                            category = requireNotNull(taskCategory)
+                        )
                     )
-                )
-                dismiss()
-                }
-                else{
+                    dismiss()
+                } else {
                     onUpdateClicked.invoke(
                         TaskUiData(
                             id = task.id,

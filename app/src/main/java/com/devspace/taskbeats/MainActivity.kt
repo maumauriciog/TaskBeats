@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
     private var categories = listOf<CategoryUiData>()
     private var tasks = listOf<TaskUiData>()
 
+    private val categoryAdapter = CategoryListAdapter()
+    private val taskAdapter = TaskListAdapter()
+
     private val dataBase by lazy {
         Room.databaseBuilder(
             applicationContext,
@@ -26,9 +29,6 @@ class MainActivity : AppCompatActivity() {
     private val taskDAO: taskDAO by lazy {
         dataBase.getTaskDAO()
     }
-
-    private val categoryAdapter = CategoryListAdapter()
-    private val taskAdapter = TaskListAdapter()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +45,14 @@ class MainActivity : AppCompatActivity() {
 
         taskAdapter.setOnClickListener { task ->
             showCreateUpdateTaskButton(task)
+        }
+
+        categoryAdapter.setOnLongClickerListener { categoryToDelete ->
+            val categoryEntityToBeDelete = categoryEntity(
+                categoryToDelete.name,
+                categoryToDelete.isSelected
+            )
+            deleteCategory(categoryEntityToBeDelete)
         }
 
         categoryAdapter.setOnClickListener { selected ->
@@ -76,13 +84,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         rvCategory.adapter = categoryAdapter
-        getCategoryFromDb(categoryAdapter)
+        getCategoryFromDb()
 
         rvTask.adapter = taskAdapter
-        getTaskFromDb(taskAdapter)
+        getTaskFromDb()
     }
 
-    private fun getCategoryFromDb(adapter: CategoryListAdapter) {
+    private fun getCategoryFromDb() {
         GlobalScope.launch(Dispatchers.IO) {
             val getDbCat: List<categoryEntity> = categoryDAO.getAll()
             val listCat = getDbCat.map {
@@ -94,12 +102,12 @@ class MainActivity : AppCompatActivity() {
             )
             GlobalScope.launch(Dispatchers.Main) {
                 categories = listCat
-                adapter.submitList(listCat)
+                categoryAdapter.submitList(listCat)
             }
         }
     }
 
-    private fun getTaskFromDb(adapter: TaskListAdapter) {
+    private fun getTaskFromDb() {
         GlobalScope.launch(Dispatchers.IO) {
             val getTskDb: List<taskEntity> = taskDAO.getAllTask()
             val listTask: List<TaskUiData> = getTskDb.map {
@@ -107,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             }
             GlobalScope.launch(Dispatchers.Main) {
                 tasks = listTask
-                adapter.submitList(listTask)
+                taskAdapter.submitList(listTask)
             }
         }
     }
@@ -115,14 +123,28 @@ class MainActivity : AppCompatActivity() {
     private fun insertCategory(categoryEntity: categoryEntity) {
         GlobalScope.launch(Dispatchers.IO) {
             categoryDAO.insert(categoryEntity)
-            getCategoryFromDb(categoryAdapter)
+            getCategoryFromDb()
         }
     }
 
     private fun insertTask(taskEntity: taskEntity) {
         GlobalScope.launch(Dispatchers.IO) {
             taskDAO.insert(taskEntity)
-            getTaskFromDb(taskAdapter)
+            getTaskFromDb()
+        }
+    }
+
+    private fun deleteTask(taskEntity: taskEntity) {
+        GlobalScope.launch(Dispatchers.IO) {
+            taskDAO.delete(taskEntity)
+            getTaskFromDb()
+        }
+    }
+
+    private fun deleteCategory(categoryEntity: categoryEntity) {
+        GlobalScope.launch(Dispatchers.IO) {
+            categoryDAO.delete(categoryEntity)
+            getCategoryFromDb()
         }
     }
 
@@ -130,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         val createTaskSheet = createUpdateTaskSheetFrame(
             task = taskUiData,
             categoryList = categories,
-            onClicked = { taskToBeCreate ->
+            onCreateClicked = { taskToBeCreate ->
                 insertTask(
                     taskEntity(
                         name = taskToBeCreate.name,
@@ -145,6 +167,14 @@ class MainActivity : AppCompatActivity() {
                     category = taskToBeUpdate.category
                 )
                 insertTask(taskEntityToBeInsert)
+            },
+            onDeleteClicked = { taskDelete ->
+                val taskToBeDelete = taskEntity(
+                    id = taskDelete.id,
+                    name = taskDelete.name,
+                    category = taskDelete.category
+                )
+                deleteTask(taskToBeDelete)
             }
         )
         createTaskSheet.show(supportFragmentManager, "createTask")
