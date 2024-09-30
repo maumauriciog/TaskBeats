@@ -18,4 +18,9 @@
     <string name="bt_create_category">create</string>
 
     <string name="bt_delete_category">delete</string>
+
+    <!--about INFORMATION CATEGORY -->
+    <string name="title_about_category">Deleting Category...</string>
+    <string name="info_about_category">DANGER! you are deleting your category, all the tasks this category will are deleting.</string>
+    <string name="btnDel_about_category">delete all tasks this category</string>
 </resources>

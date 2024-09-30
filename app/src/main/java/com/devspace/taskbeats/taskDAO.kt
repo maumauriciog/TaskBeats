@@ -20,4 +20,9 @@ interface taskDAO {
     @Delete
     fun delete(taskEntity: taskEntity)
 
+    @Query("Select * From taskEntity where category is :categoryName")
+    fun getAllByCategoryName(categoryName: String): List<taskEntity>
+
+    @Delete
+    fun deleteAll(taskEntity: List<taskEntity>)
 }

@@ -48,11 +48,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         categoryAdapter.setOnLongClickerListener { categoryToDelete ->
-            val categoryEntityToBeDelete = categoryEntity(
-                categoryToDelete.name,
-                categoryToDelete.isSelected
-            )
-            deleteCategory(categoryEntityToBeDelete)
+            if (categoryToDelete.name != "+") {
+                val title: String = this.getString(R.string.title_about_category)
+                val description: String = this.getString(R.string.info_about_category)
+                val btnText: String = this.getString(R.string.btnDel_about_category)
+
+                showInfoDialog(
+                    title,
+                    description,
+                    btnText
+                ) {
+                    val categoryEntityToBeDelete = categoryEntity(
+                        categoryToDelete.name,
+                        categoryToDelete.isSelected
+                    )
+                    deleteCategory(categoryEntityToBeDelete)
+                }
+            }
         }
 
         categoryAdapter.setOnClickListener { selected ->
@@ -141,10 +153,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showInfoDialog(
+        title: String,
+        description: String,
+        btnText: String,
+        onClick: () -> Unit
+    ) {
+        val infoBottSheet = infoDeleteCategory(
+            title = title,
+            description = description,
+            btnText = btnText,
+            onClick
+        )
+        infoBottSheet.show(supportFragmentManager, "infoBottSheet")
+    }
+
     private fun deleteCategory(categoryEntity: categoryEntity) {
         GlobalScope.launch(Dispatchers.IO) {
+            val deleteAllCategoryByTask = taskDAO.getAllByCategoryName(categoryEntity.name)
+            taskDAO.deleteAll(deleteAllCategoryByTask)
             categoryDAO.delete(categoryEntity)
             getCategoryFromDb()
+            getTaskFromDb()
         }
     }
 
