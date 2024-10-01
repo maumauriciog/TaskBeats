@@ -5,6 +5,7 @@ package com.devspace.taskbeats
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings.Global
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         categoryAdapter.setOnLongClickerListener { categoryToDelete ->
-            if (categoryToDelete.name != "+") {
+            if (categoryToDelete.name != "+" && categoryToDelete.name != "All") {
                 val title: String = this.getString(R.string.title_about_category)
                 val description: String = this.getString(R.string.info_about_category)
                 val btnText: String = this.getString(R.string.btnDel_about_category)
@@ -86,12 +87,11 @@ class MainActivity : AppCompatActivity() {
                         else -> item
                     }
                 }
-                val taskTemp = if (selected.name != "All") {
-                    tasks.filter { it.category == selected.name }
+                if (selected.name != "All") {
+                    filterTaskByCategoryName(selected.name)
                 } else {
-                    tasks
+                    getTaskFromDb()
                 }
-                taskAdapter.submitList(taskTemp)
                 categoryAdapter.submitList(categoryTemp)
             }
         }
@@ -188,18 +188,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterTaskByCategoryName(category: String){
-        val taskFromDB: List<taskEntity> = taskDAO.getAllByCategoryName(category)
-        val tasksUi: List<TaskUiData> = taskFromDB.map {
-            TaskUiData(
-                id = it.id,
-                name = it.name,
-                category = it.category
-            )
-        }
-        GlobalScope.launch(Dispatchers.Main){
-            tasks = tasksUi
-            taskAdapter.submitList(tasksUi)
+    private fun filterTaskByCategoryName(category: String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val taskFromDB: List<taskEntity> = taskDAO.getAllByCategoryName(category)
+            val tasksUi: List<TaskUiData> = taskFromDB.map {
+                TaskUiData(
+                    id = it.id,
+                    name = it.name,
+                    category = it.category
+                )
+            }
+            GlobalScope.launch(Dispatchers.Main) {
+                taskAdapter.submitList(tasksUi)
+            }
         }
     }
 
