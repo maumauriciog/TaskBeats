@@ -7,7 +7,7 @@ O app TaskBeat, desenvolvido em linguagem nativa de programação kotlin, permit
 ## 💻 Tecnologias
 - kotlin
 - ViewGroup
-   - Linaerlayout
+   - Linearlayout
 - Componentes de UI
    - TextView
    - EditView
