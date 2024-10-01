@@ -20,7 +20,7 @@ O app TaskBeat, desenvolvido em linguagem nativa de programação kotlin, permit
 
 
 ## 🎓 Author
-Maurício G Chagas (follow me on [Twitter](https://twitter.com/maumauriciog))
+Maurício Gomes das Chagas (follow me on [Twitter](https://twitter.com/maumauriciog))
 
 
 ## 📃 License
