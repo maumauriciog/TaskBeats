@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 
 class createUpdateTaskSheetFrame(
-    private val categoryList: List<CategoryUiData>,
+    private val categoryList: List<categoryEntity>,
     private val task: TaskUiData? = null,
     private val onCreateClicked: (TaskUiData) -> Unit,
     private val onUpdateClicked: (TaskUiData) -> Unit,
@@ -35,8 +35,12 @@ class createUpdateTaskSheetFrame(
         val bt_DelTask = view.findViewById<Button>(R.id.bv_delTask)
         val tiv_TaskName = view.findViewById<TextView>(R.id.tiv_writeTask)
 
-        val categoryStr: List<String> = categoryList.map { it.name }
         var taskCategory: String? = null
+        val categoriesListTemp = mutableListOf("Select Categorys...")
+        categoriesListTemp.addAll(
+            categoryList.map { it.name }
+        )
+        val categoryStr: List<String> = categoriesListTemp
 
         ArrayAdapter(
             requireActivity().baseContext,
@@ -88,7 +92,7 @@ class createUpdateTaskSheetFrame(
 
         bt_CrTask.setOnClickListener {
             val nameTask = tiv_TaskName.text.toString()
-            if (taskCategory != null) {
+            if (taskCategory != "Select Categorys...") {
                 if (task == null) {
                     onCreateClicked.invoke(
                         TaskUiData(

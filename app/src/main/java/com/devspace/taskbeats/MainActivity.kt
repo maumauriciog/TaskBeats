@@ -13,6 +13,7 @@ import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     private var categories = listOf<CategoryUiData>()
+    private var categoriesEntits = listOf<categoryEntity>()
     private var tasks = listOf<TaskUiData>()
 
     private val categoryAdapter = CategoryListAdapter()
@@ -106,6 +107,7 @@ class MainActivity : AppCompatActivity() {
     private fun getCategoryFromDb() {
         GlobalScope.launch(Dispatchers.IO) {
             val getDbCat: List<categoryEntity> = categoryDAO.getAll()
+            categoriesEntits = getDbCat
             val listCat = getDbCat.map {
                 CategoryUiData(name = it.name, isSelected = it.isSelected)
             }
@@ -207,7 +209,7 @@ class MainActivity : AppCompatActivity() {
     private fun showCreateUpdateTaskButton(taskUiData: TaskUiData? = null) {
         val createTaskSheet = createUpdateTaskSheetFrame(
             task = taskUiData,
-            categoryList = categories,
+            categoryList = categoriesEntits,
             onCreateClicked = { taskToBeCreate ->
                 insertTask(
                     taskEntity(
