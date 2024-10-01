@@ -23,4 +23,7 @@
     <string name="title_about_category">Deleting Category...</string>
     <string name="info_about_category">DANGER! you are deleting your category, all the tasks this category will are deleting.</string>
     <string name="btnDel_about_category">delete all tasks this category</string>
+
+    <string name="no_found_category_and_task">no category found !</string>
+    <string name="no_found_description">please create one</string>
 </resources>
