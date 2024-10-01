@@ -80,12 +80,13 @@ class MainActivity : AppCompatActivity() {
             } else {
                 val categoryTemp = categories.map { item ->
                     when {
+                        item.name == selected.name && item.isSelected -> item.copy(isSelected = true)
                         item.name == selected.name && !item.isSelected -> item.copy(isSelected = true)
-                        item.name == selected.name && item.isSelected -> item.copy(isSelected = false)
+                        item.name != selected.name && item.isSelected -> item.copy(isSelected = false)
                         else -> item
                     }
                 }
-                val taskTemp = if (selected.name != "ALL") {
+                val taskTemp = if (selected.name != "All") {
                     tasks.filter { it.category == selected.name }
                 } else {
                     tasks
@@ -112,9 +113,18 @@ class MainActivity : AppCompatActivity() {
             listCat.add(
                 CategoryUiData(name = "+", isSelected = false)
             )
+
+            //criando uma variável, adicionando
+            val categoryAddAll = mutableListOf(
+                CategoryUiData(
+                    name = "All",
+                    isSelected = true
+                )
+            )
+            categoryAddAll.addAll(listCat)
             GlobalScope.launch(Dispatchers.Main) {
-                categories = listCat
-                categoryAdapter.submitList(listCat)
+                categories = categoryAddAll
+                categoryAdapter.submitList(categories)
             }
         }
     }
@@ -175,6 +185,21 @@ class MainActivity : AppCompatActivity() {
             categoryDAO.delete(categoryEntity)
             getCategoryFromDb()
             getTaskFromDb()
+        }
+    }
+
+    private fun filterTaskByCategoryName(category: String){
+        val taskFromDB: List<taskEntity> = taskDAO.getAllByCategoryName(category)
+        val tasksUi: List<TaskUiData> = taskFromDB.map {
+            TaskUiData(
+                id = it.id,
+                name = it.name,
+                category = it.category
+            )
+        }
+        GlobalScope.launch(Dispatchers.Main){
+            tasks = tasksUi
+            taskAdapter.submitList(tasksUi)
         }
     }
 
