@@ -1,7 +1,9 @@
 # 📝 TaskBeats
-O app TaskBeat, desenvolvido em linguagem de programação kotlin, permite você criar categorias e suas tarefas de forma simples e rápida. Possibilita ao usuário filtrar também por categorias, assim será mostrado em tela somente as tarefas pertinentes aquela categoria.
+O app TaskBeat, desenvolvido em linguagem nativa de programação kotlin, permite você criar categorias e suas tarefas de forma simples e rápida. Possibilita ao usuário filtrar também por categorias, assim será mostrado em tela somente as tarefas pertinentes aquela categoria.
 
 ## 📱 Screenshots
+<img src="/readme/Screenshot_20240930_174734a.png" width="250">
+
 ## 💻 Tecnologias
 - kotlin
 - ViewGroup
@@ -18,7 +20,7 @@ O app TaskBeat, desenvolvido em linguagem de programação kotlin, permite você
 
 
 ## 🎓 Author
-Maurício G Chagas (follow me on [Twitter](https://twitter.com/maumauriciog))
+Maurício Gomes das Chagas (follow me on [Twitter](https://twitter.com/maumauriciog))
 
 
 ## 📃 License
