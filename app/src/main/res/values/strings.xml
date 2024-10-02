@@ -26,4 +26,6 @@
 
     <string name="no_found_category_and_task">no category found !</string>
     <string name="no_found_description">please create one</string>
+
+    <string name="empty_new_category">new category</string>
 </resources>

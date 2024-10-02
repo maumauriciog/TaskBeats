@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings.Global
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() {
         val rvCategory = findViewById<RecyclerView>(R.id.rv_categories)
         val rvTask = findViewById<RecyclerView>(R.id.rv_tasks)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val bvEmptyCategory = findViewById<Button>(R.id.bv_create_empty)
+
+        bvEmptyCategory.setOnClickListener {
+            showCreateCategoryBottSheet()
+        }
 
         fab.setOnClickListener {
             showCreateUpdateTaskButton()
@@ -71,14 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         categoryAdapter.setOnClickListener { selected ->
             if (selected.name == "+") {
-                val createCategoryFrame = createCategorySheetFrame { categoryName ->
-                    val vrCategoryEntity = categoryEntity(
-                        name = categoryName,
-                        isSelected = false
-                    )
-                    insertCategory(vrCategoryEntity)
-                }
-                createCategoryFrame.show(supportFragmentManager, "sheet")
+                showCreateCategoryBottSheet()
             } else {
                 val categoryTemp = categories.map { item ->
                     when {
@@ -237,4 +236,16 @@ class MainActivity : AppCompatActivity() {
         )
         createTaskSheet.show(supportFragmentManager, "createTask")
     }
+
+    private fun showCreateCategoryBottSheet() {
+        val createCategoryFrame = createCategorySheetFrame { categoryName ->
+            val vrCategoryEntity = categoryEntity(
+                name = categoryName,
+                isSelected = false
+            )
+            insertCategory(vrCategoryEntity)
+        }
+        createCategoryFrame.show(supportFragmentManager, "sheet")
+    }
+
 }
