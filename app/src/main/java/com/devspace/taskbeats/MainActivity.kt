@@ -5,8 +5,9 @@ package com.devspace.taskbeats
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings.Global
 import android.widget.Button
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,6 +17,10 @@ class MainActivity : AppCompatActivity() {
     private var categories = listOf<CategoryUiData>()
     private var categoriesEntits = listOf<categoryEntity>()
     private var tasks = listOf<TaskUiData>()
+
+    private lateinit var rvCategory: RecyclerView
+    private lateinit var ctnLinearLayoutEmpty: LinearLayout
+    private lateinit var fab: FloatingActionButton
 
     private val categoryAdapter = CategoryListAdapter()
     private val taskAdapter = TaskListAdapter()
@@ -38,9 +43,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val rvCategory = findViewById<RecyclerView>(R.id.rv_categories)
+        rvCategory = findViewById(R.id.rv_categories)
+        fab = findViewById(R.id.fab)
+        ctnLinearLayoutEmpty = findViewById(R.id.ll_emptyCategory)
         val rvTask = findViewById<RecyclerView>(R.id.rv_tasks)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
         val bvEmptyCategory = findViewById<Button>(R.id.bv_create_empty)
 
         bvEmptyCategory.setOnClickListener {
@@ -107,6 +113,18 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.IO) {
             val getDbCat: List<categoryEntity> = categoryDAO.getAll()
             categoriesEntits = getDbCat
+
+            GlobalScope.launch(Dispatchers.Main) {
+                if (categoriesEntits.isEmpty()) {
+                    ctnLinearLayoutEmpty.isVisible = true
+                    fab.isVisible = false
+                    rvCategory.isVisible = false
+                } else {
+                    ctnLinearLayoutEmpty.isVisible = false
+                    fab.isVisible = true
+                    rvCategory.isVisible = true
+                }
+            }
             val listCat = getDbCat.map {
                 CategoryUiData(name = it.name, isSelected = it.isSelected)
             }
