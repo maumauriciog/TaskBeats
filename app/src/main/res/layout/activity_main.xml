@@ -58,6 +58,15 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="rv_tasks" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="italic"
+        android:textAlignment="textEnd"
+        android:layout_marginEnd="20sp"
+        android:text="@string/by_maur_cio_g"
+        tools:ignore="MissingConstraints" />
+
     <LinearLayout
         android:id="@+id/ll_emptyCategory"
         android:layout_width="match_parent"
